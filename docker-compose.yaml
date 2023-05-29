@@ -1,0 +1,25 @@
+version: '3'
+services:
+  grpc-go:
+     build:
+      context: ./
+      dockerfile: ./Dockerfile_server
+     image: server-image
+     ports:
+     - "50051:50051"
+  envoy:
+      build:
+        context: ./
+        dockerfile: ./Dockerfile_envoy
+      image: grpcweb/envoy
+      ports:
+      - "8080:8080"
+      links:
+      - grpc-go
+  web-client:
+      build:
+        context: ./
+        dockerfile: ./Dockerfile_client
+      image: client-image
+      ports:
+      - "8082:80"

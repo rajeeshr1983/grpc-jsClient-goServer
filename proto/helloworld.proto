@@ -1,0 +1,21 @@
+option go_package = "/grpc_sourcefiles;grpc_sourcefiles";
+
+service Greeter {
+  // unary call
+  rpc SayHello(HelloRequest) returns (HelloReply);
+  // server streaming call
+  rpc SayRepeatHello(RepeatHelloRequest) returns (stream HelloReply);
+}
+
+message HelloRequest {
+  required string name = 1;
+}
+
+message RepeatHelloRequest {
+  required string name = 1;
+  required int32 count = 2;
+}
+
+message HelloReply {
+  required string message = 1;
+}

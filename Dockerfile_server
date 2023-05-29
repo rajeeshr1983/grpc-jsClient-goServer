@@ -1,0 +1,38 @@
+FROM golang:1.20
+WORKDIR /path
+COPY /server /server
+COPY /proto /proto
+COPY /client_grpc_web_source /client_grpc_web_source
+COPY client.js .
+COPY go.mod .
+COPY go.sum .
+
+
+#RUN go mod download
+#RUN go build -o "app" .
+#RUN chmod +x /path/app
+CMD ["go run", "/path/server/server.go"]
+#ENTRYPOINT ["go run", "/zoom/app.sh"]
+FROM golang:alpine
+
+
+# Install git and ca-certificates (needed to be able to call HTTPS)
+RUN apk --update add ca-certificates git
+
+
+# Move to working directory /app
+WORKDIR /app
+
+
+# Copy the code into the container
+COPY /proto ./proto
+COPY /server ./
+COPY go.mod ./go.mod
+COPY go.sum ./go.sum
+# Download dependencies using go mod
+RUN go mod download
+# Build the application's binary
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o main .
+# Command to run the application when starting the container
+CMD ["/app/main"]
+EXPOSE 50051

@@ -1,0 +1,8 @@
+FROM nginx
+#RUN mkdir -p /app/
+#WORKDIR /app/
+#COPY client_grpc_web_source /usr/share/nginx/html/client_grpc_web_source
+COPY dist /usr/share/nginx/html/dist
+COPY index.html /usr/share/nginx/html
+
+EXPOSE 8082:80
